@@ -1,26 +1,52 @@
 import express from 'express'
-
-const app = express()
+import { PrismaClient } from '@prisma/client'
 
 // HTTP methods / API RESTful
 // HTTP Codes - 2** Sucesso, 3** Redirecionamento, 4** Erro pela aplicação, 5** Erros inesperados (principais)
 
-app.get('/games', (request, response) => {
-    return response.json([]);
+const app = express()
+const prisma = new PrismaClient()
+
+app.get('/games', async (request, response) => {
+    const games = await prisma.game.findMany({
+        include: {
+            _count: {
+                select: {
+                    ads: true,
+                }
+            }
+        }
+    })
+    
+    return response.json(games);
 });
 
 app.post('/ads', (request, response) => {
     return response.status(201).json([]);
 });
 
-app.get('/games/:id/ads', (request, response) => {
-    //const gameId = request.params.id;
+app.get('/games/:id/ads', async (request, response) => {
+    const gameId = request.params.id;
 
-    return response.json([
-        {id: 1, name:'id é o 1'},
-        {id: 2, name:'id é o 2'},
-        {id: 3, name:'id é o 3'}
-    ])
+    const ads = await prisma.ad.findMany({
+        select: {
+            id: true,
+            name: true,
+            weekDays: true,
+            useVoiceChannel: true,
+            yearsPlaying: true,
+            hourEnd: true,
+            hourStart: true,
+        },
+        where: {
+            gameId,
+        },
+        orderBy: {
+            createdAt: 'desc',
+        }
+    })
+
+    return response.json(ads)
 })
 
 app.get('/ads/:id/discord', (request, response) => {
