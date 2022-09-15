@@ -43,6 +43,7 @@ export function App() {
               bannerUrl={game.bannerUrl}
               title={game.title}
               adsCount={game._count.ads}
+              
             />
           )
         })}
