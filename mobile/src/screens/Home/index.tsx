@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 import logoImg from '../../assets/logo-nlw-esports.png'
-import { Background } from '../../components/Background';
 
+import { Background } from '../../components/Background';
 import { GameCard, GameCardProps } from '../../components/GameCard';
 import { Heading } from '../../components/Heading';
 
@@ -21,7 +21,7 @@ export function Home() {
   }
 
   useEffect(() => {
-    fetch('http://172.20.12.127:3333/games')
+    fetch('http://172.20.10.179:3333/games')
       .then(response => response.json())
       .then(data => setGames(data))
   })
